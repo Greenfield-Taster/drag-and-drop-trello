@@ -27,12 +27,13 @@ function App() {
 
 	function dragOverHandler(e) {
 		e.preventDefault()
-		if (e.target.className == 'item') {
-			e.target.style.boxShadow = '0 4px 3px gray'
+		if (e.target.className == 'item') { 
+			e.target.style.background = 'lightgray'
 		}
 	}
-	function dragLeaveHandler(e) {
-		e.target.style.boxShadow = 'none'
+
+	function dragLeaveHandler(e) { 
+		e.target.style.background = 'none'
 	}
 
 	function dragStartHandler(e, board, item) {
@@ -41,51 +42,62 @@ function App() {
 	}
 
 	function dragEndHandler(e) {
-		e.target.style.boxShadow = 'none'
+		e.target.style.background = 'none'
 	}
 
 	function dropHandler(e, board, item) {
 		e.preventDefault()
-
+		 
 		const currentIndex = currentBoard.items.indexOf(currentItem)
 		currentBoard.items.splice(currentIndex, 1)
 
 		const dropIndex = board.items.indexOf(item)
-		board.items.splice(dropIndex + 1, 0, currentItem)
+ 
+		if (
+			e.clientY <
+			e.target.getBoundingClientRect().y + e.target.offsetHeight / 2
+		) {
+			board.items.splice(dropIndex, 0, currentItem)  
+		} else {
+			board.items.splice(dropIndex + 1, 0, currentItem)  
+		}
 
 		setBoards(
 			boards.map(b => {
 				if (b.id === board.id) {
 					return board
 				}
-
+				
 				if (b.id === currentBoard.id) {
 					return currentBoard
 				}
 				return b
 			})
 		)
+		e.target.style.background = 'none'
 	}
 
-	function dropCardHandler(e, board) {
-		board.items.push(currentItem)
+	function dropCardHandler(e, board) { 
+		if (!e.target.classList.contains('item')) {
+			board.items.push(currentItem)
 
-		const currentIndex = currentBoard.items.indexOf(currentItem)
-		currentBoard.items.splice(currentIndex, 1)
+			const currentIndex = currentBoard.items.indexOf(currentItem)
+			currentBoard.items.splice(currentIndex, 1)
 
-		setBoards(
-			boards.map(b => {
-				if (b.id === board.id) {
-					return board
-				}
+			setBoards(
+				boards.map(b => {
+					if (b.id === board.id) {
+						return board
+					}
 
-				if (b.id === currentBoard.id) {
-					return currentBoard
-				}
-				return b
-			})
-		)
-		e.target.style.boxShadow = 'none'
+					if (b.id === currentBoard.id) {
+						return currentBoard
+					}
+					return b
+				})
+			)
+		}
+		e.target.style.background = 'none'
 	}
 
 	return (
