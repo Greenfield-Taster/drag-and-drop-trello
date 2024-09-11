@@ -5,8 +5,7 @@ import boardsData from "./data/boards.json"
 function App() {
 	const [boards, setBoards] = useState(boardsData)
 	const [currentBoard, setCurrentBoard] = useState(null)
-	const [currentItem, setCurrentItem] = useState(null)
-	const [status, setStatus] = useState("")
+	const [currentItem, setCurrentItem] = useState(null) 
 
 	function dragOverHandler(e) {
 		e.preventDefault()
