@@ -1,11 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
-import boardsData from "./data/boards.json"
+import boardsData from './data/boards.json'
 
 function App() {
-	const [boards, setBoards] = useState(boardsData)
+	const [boards, setBoards] = useState(() => {
+		const savedBoards = localStorage.getItem('boards')
+		return savedBoards ? JSON.parse(savedBoards) : boardsData
+	})
+
 	const [currentBoard, setCurrentBoard] = useState(null)
-	const [currentItem, setCurrentItem] = useState(null) 
+	const [currentItem, setCurrentItem] = useState(null)
+
+	useEffect(() => {
+		localStorage.setItem('boards', JSON.stringify(boards))
+	}, [boards])
 
 	function dragOverHandler(e) {
 		e.preventDefault()
@@ -87,7 +95,7 @@ function App() {
 		e.target.style.transform = 'scale(1)'
 	}
 
-	function getStatusClass(boardTitle){
+	function getStatusClass(boardTitle) {
 		return boardTitle === 'To do' ? 'status-red' : 'status-green'
 	}
 
@@ -104,6 +112,7 @@ function App() {
 						<div className='board__title' key={board.id}>
 							{board.title}
 						</div>
+						<hr />
 						{board.items.map(item => (
 							<div
 								key={item.id}
